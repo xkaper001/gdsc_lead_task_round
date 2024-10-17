@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:gdsc_lead_task_round/palette.dart';
 import 'package:gdsc_lead_task_round/responsive.dart';
@@ -8,97 +6,43 @@ import 'sign_in_screen.dart';
 import 'sign_up_screen.dart';
 
 class OnboardScreen extends StatelessWidget {
-  const OnboardScreen({super.key});
+  final bool isDarkMode;
+  final VoidCallback toggleTheme;
+
+  const OnboardScreen({
+    super.key,
+    required this.isDarkMode,
+    required this.toggleTheme,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: const Color.fromRGBO(244, 242, 252, 1),
+        floatingActionButton: FloatingActionButton(
+          onPressed: toggleTheme,
+          child: Icon(
+            isDarkMode ? Icons.dark_mode : Icons.light_mode,
+            color: isDarkMode ? Colors.black : Colors.white,
+          ),
+          backgroundColor: isDarkMode ? Colors.white : Colors.black,
+        ),
         body: ResponsiveLayout(
           mobileScaffold: Column(
             children: [
               Expanded(child: illustration),
-              Expanded(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Text(
-                    "GDG Leads\nTask Round Here",
-                    style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const Text(
-                    "Developed by Ayan aka xkaper001 for\nGDSC Lead Task Round with ❤️",
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Palette.bg,
-                      borderRadius: const BorderRadius.all(Radius.circular(16)),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const SignUpScreen()));
-                          },
-                          child: Container(
-                            width: 150,
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(16),
-                              color: Colors.white,
-                            ),
-                            child: const Text(
-                              "Register",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            log("Signned In");
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const SignInScreen(),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            width: 150,
-                            child: const Text(
-                              "Sign In",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                ],
-              ))
+              Expanded(child: belowIllustration(context)),
             ],
           ),
           tabletScaffold: Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Expanded(child: illustration),
-              const Expanded(child: LoginForm()),
+              Expanded(child: Column(
+                children: [
+                  illustration,
+                  Expanded(child: belowIllustration(context)),
+                ],
+              )),
+              const Expanded(child: SignInScreen()),
             ],
           ),
           desktopScaffold: Row(
@@ -114,7 +58,7 @@ class OnboardScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(16))),
-                  child: const LoginForm(),
+                  child: const SignInScreen(),
                 ),
               ),
             ],
@@ -132,6 +76,81 @@ final illustration = Container(
         image: AssetImage('assets/illustration.jpg'), fit: BoxFit.cover),
   ),
 );
+
+Widget belowIllustration(BuildContext context) => Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        const Text(
+          "GDG Leads\nTask Round Here",
+          style: TextStyle(
+            fontSize: 36,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const Text(
+          "Developed by Ayan aka xkaper001 for\nGDSC Lead Task Round with ❤️",
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 20),
+        Container(
+          decoration: BoxDecoration(
+            color: Palette.bg,
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
+            border: Border.all(
+              color: Colors.white,
+              width: 2,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const SignUpScreen()));
+                },
+                child: Container(
+                  width: 150,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: Colors.white,
+                  ),
+                  child: const Text(
+                    "Register",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700, color: Colors.black),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SignInScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  width: 150,
+                  child: const Text(
+                    "Sign In",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700, color: Colors.black),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 40),
+      ],
+    );
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});

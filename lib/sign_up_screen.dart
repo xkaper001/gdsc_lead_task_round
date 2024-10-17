@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import 'password_regex.dart';
+import 'sign_in_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -19,6 +20,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
+    if (width > 500) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pop(context);
+      });
+    }
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -44,6 +53,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fontSize: 28,
                 ),
               ),
+            ),
+            AuthInputField(
+              hintText: "Enter Name",
+              validator: (value) {
+                // if (!value!.contains(RegExp(emailRegex))) {
+                //   return 'Please enter a valid email address';
+                // }
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your name';
+                }
+                return null;
+              },
             ),
             AuthInputField(
               formkey: _formkey1,
@@ -82,7 +103,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 onPressed: () {
                   if (_formkey1.currentState!.validate() &&
                       _formkey2.currentState!.validate()) {
-                    log('Form is valid');
+                    ScaffoldMessenger.of(context)
+                        .showMaterialBanner(MaterialBanner(
+                      content: const Text('Form is valid User Registered'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context)
+                                .hideCurrentMaterialBanner();
+                          },
+                          child: const Text('Close'),
+                        )
+                      ],
+                    ));
                   }
                 },
                 style: ButtonStyle(
@@ -94,18 +127,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   minimumSize:
                       const WidgetStatePropertyAll(Size.fromHeight(72)),
                 ),
-                child: const Text('Sign In'),
+                child: const Text('Register'),
               ),
             ),
             const Spacer(),
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SignInScreen(),
+                    ),
+                  );
+                },
                 child: RichText(
-                  text: const TextSpan(text: "Not a member? ", children: [
+                  text: const TextSpan(text: "Already a member? ", children: [
                     TextSpan(
-                        text: "Register now",
+                        text: "Login",
                         style: const TextStyle(
                           color: Colors.blue,
                         ))
@@ -123,12 +162,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 class AuthInputField extends StatefulWidget {
   final String hintText;
   final String? Function(String?)? validator;
-  final Key formkey;
+  final Key? formkey;
   const AuthInputField(
-      {super.key,
-      required this.hintText,
-      this.validator,
-      required this.formkey});
+      {super.key, required this.hintText, this.validator, this.formkey});
 
   @override
   State<AuthInputField> createState() => AuthInputFieldState();

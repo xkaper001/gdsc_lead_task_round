@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
+import 'onboard_screen.dart';
 import 'password_regex.dart';
+import 'sign_up_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -19,6 +21,15 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    double width = MediaQuery.of(context).size.width;
+
+    if (width  > 500) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pop(context);
+      });
+    }
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -86,8 +97,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   }
                 },
                 style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(
-                      const Color.fromRGBO(253, 107, 104, 1)),
+                  backgroundColor: const WidgetStatePropertyAll(
+                      Color.fromRGBO(253, 107, 104, 1)),
                   shape: WidgetStatePropertyAll(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   )),
@@ -101,12 +112,18 @@ class _SignInScreenState extends State<SignInScreen> {
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const SignUpScreen(),
+                    ),
+                  );
+                },
                 child: RichText(
-                  text: const TextSpan(text: "Not a member? ", children: [
+                  text: const TextSpan(text: "Not a member? ", style: TextStyle(color: Colors.black), children: [
                     TextSpan(
                         text: "Register now",
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.blue,
                         ))
                   ]),
@@ -155,6 +172,7 @@ class AuthInputFieldState extends State<AuthInputField> {
               (widget.hintText == "Password") ? !_isPassVIsible : false,
           decoration: InputDecoration(
             hintText: widget.hintText,
+            hintStyle: const TextStyle(color: Colors.black),
             filled: true,
             fillColor: Colors.white,
             border: InputBorder.none, // Remove the underline border
