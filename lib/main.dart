@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gdsc_lead_task_round/palette.dart';
+import 'package:gdsc_lead_task_round/sign_in_screen.dart';
+
+import 'onboard_screen.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,12 +13,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      // home: SignInScreen(),
+      home: OnboardScreen(),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(scaffoldBackgroundColor: Palette.bg),
     );
   }
 }
